@@ -1,0 +1,40 @@
+server:
+  port: 8090
+
+spring:
+  application:
+    name: books
+  datasource:
+    url: jdbc:postgresql://localhost:5432/library
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false # Development only
+    properties:
+      hibernate:
+        format_sql: true # Development only
+        transaction.coordinator_class: jdbc
+  batch:
+    jdbc:
+      initialize-schema: always
+    job:
+      enabled: false
+      name: "importBooks"
+
+books:
+  chunk-size: 20
+  dir:
+    upload: C:\Users\copi\Documents\Learning\Files\Upload\
+    proceed: C:\Users\copi\Documents\Learning\Files\Proceed\
+  fields:
+    - name: Book Name
+      num: 1
+    - name: Author
+      num: 2
+    - name: Amount
+      num: 3
+  cron:
+    import-books: 0 * * * * *

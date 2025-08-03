@@ -7,6 +7,7 @@ import com.cop.books.services.BookService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,20 +24,20 @@ public class BookController {
     }
 
     @GetMapping(value = "/all")
-    public ResponseDto<List<BookDto>> getAllBooks(@RequestBody PaginationDto dto) {
+    public ResponseEntity<ResponseDto<List<BookDto>>> getAllBooks(@RequestBody PaginationDto dto) {
         try {
-            return new ResponseDto<>(
+            return ResponseEntity.ok().body(new ResponseDto<>(
                 bookService.getAllBooks(dto),
-        "Success get all books",
-                HttpStatus.OK.value()
+                "Success get all books",
+                HttpStatus.OK.value())
             );
         } catch (Exception e) {
             log.error("Error while getting books: {}", e.getMessage());
 
-            return new ResponseDto<>(
-            null,
-        "Error get all books",
-                HttpStatus.INTERNAL_SERVER_ERROR.value()
+            return ResponseEntity.internalServerError().body(new ResponseDto<>(
+                null,
+                "Error get all books",
+                HttpStatus.INTERNAL_SERVER_ERROR.value())
             );
         }
     }
@@ -58,5 +59,10 @@ public class BookController {
                 HttpStatus.INTERNAL_SERVER_ERROR.value()
             );
         }
+    }
+
+    @GetMapping("/testing")
+    public ResponseEntity<String> getBook() {
+        return ResponseEntity.ok().body("Book");
     }
 }

@@ -42,7 +42,3 @@ buildNumber.properties
 library-app/.mvn/timing.properties
 # https://maven.apache.org/wrapper/#usage-without-binary-jar
 library-app/.mvn/wrapper/maven-wrapper.jar
-
-.DS_Store
-**/mvnw
-**/mvnw.cmd

@@ -1,0 +1,24 @@
+server:
+  port: 8092
+
+spring:
+  application:
+    name: user-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/library
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false # Development only
+    properties:
+      hibernate:
+        format_sql: true # Development only
+        transaction.coordinator_class: jdbc
+    defer-datasource-initialization: true
+  sql:
+    init:
+      mode: never # always only for Initialization
+      schema-locations: optional:classpath*:v1.0-init-user.sql

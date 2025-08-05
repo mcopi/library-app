@@ -1,8 +1,12 @@
 package com.cop.user.models;
 
 import jakarta.persistence.*;
+//import org.springframework.security.core.GrantedAuthority;
+//import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "cop_user")
@@ -25,9 +29,34 @@ public class User extends BaseEntity {
     private Date dateOfBirth;
     @Column(name = "description", length = 255)
     private String description;
-    @ManyToMany
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id")
-    private UserRole roleId;
+    private UserRole role;
+
+//    @Override
+//    public boolean isAccountNonExpired() {
+//        return UserDetails.super.isAccountNonExpired();
+//    }
+//
+//    @Override
+//    public boolean isAccountNonLocked() {
+//        return UserDetails.super.isAccountNonLocked();
+//    }
+//
+//    @Override
+//    public boolean isCredentialsNonExpired() {
+//        return UserDetails.super.isCredentialsNonExpired();
+//    }
+//
+//    @Override
+//    public boolean isEnabled() {
+//        return UserDetails.super.isEnabled();
+//    }
+//
+//    @Override
+//    public Collection<? extends GrantedAuthority> getAuthorities() {
+//        return List.of();
+//    }
 
     public Long getId() {
         return id;
@@ -94,11 +123,11 @@ public class User extends BaseEntity {
     }
 
     public UserRole getRoleId() {
-        return roleId;
+        return role;
     }
 
-    public void setRoleId(UserRole roleId) {
-        this.roleId = roleId;
+    public void setRoleId(UserRole role) {
+        this.role = role;
     }
 
     @Override
@@ -111,7 +140,7 @@ public class User extends BaseEntity {
                 ", lastLoginDate=" + lastLoginDate +
                 ", dateOfBirth=" + dateOfBirth +
                 ", description='" + description + '\'' +
-                ", roleId=" + roleId +
+                ", roleId=" + role +
                 '}';
     }
 }

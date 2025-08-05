@@ -1,0 +1,30 @@
+--BEGIN;
+
+--    INSERT INTO COP_ROLE_USER(ROLE_NAME, ROLE_CODE, CREATED_DATE, CREATED_BY)
+--        VALUES('ADMIN', 'ADM', now(), 'SYSTEM'),
+--        ('USER', 'USR', now(), 'SYSTEM');
+--
+--    INSERT INTO COP_USER(ID, CREATED_DATE, CREATED_BY, USERNAME, FIRST_NAME, LAST_NAME, DESCRIPTION, ROLE_ID)
+--        VALUES(nextval('public.user_sequence'), now(), 'SYSTEM', 'admin', 'ADMIN',
+--        'LIBRARY APP', 'Dibuat oleh system', (SELECT id FROM COP_ROLE_USER WHERE ROLE_CODE = 'ADM'));
+--
+--    INSERT INTO COP_ROLE_ACCESS(ACCESS_NAME, ACCESS_CODE, CREATED_DATE, CREATED_BY)
+--        VALUES('Home Admin', 'HADM', now(), 'SYSTEM'),
+--        ('Home', 'HUSR', now(), 'SYSTEM'),
+--        ('Dashboard Admin', 'DADM', now(), 'SYSTEM'),
+--        ('Dashboard', 'DUSR', now(), 'SYSTEM');
+--
+--    INSERT INTO COP_USER_ROLE_ACCESS(USER_ID, ROLE_ID, ROLE_ACCESS_ID, CREATED_DATE, CREATED_BY)
+--        VALUES(
+--            (SELECT id FROM COP_USER WHERE username = 'admin'),
+--            (SELECT id FROM COP_ROLE_USER WHERE role_code = 'ADM'),
+--            (SELECT id FROM COP_ROLE_ACCESS WHERE access_code = 'HADM'),
+--            now(), 'SYSTEM'
+--        ), (
+--             (SELECT id FROM COP_USER WHERE username = 'admin'),
+--             (SELECT id FROM COP_ROLE_USER WHERE role_code = 'ADM'),
+--             (SELECT id FROM COP_ROLE_ACCESS WHERE access_code = 'DADM'),
+--             now(), 'SYSTEM'
+--         );
+
+--COMMIT;

@@ -11,6 +11,9 @@ import com.cop.user.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,22 +22,28 @@ import java.util.Optional;
 @RestController
 @RequestMapping(value = "/auth")
 public class AuthController {
+    private final AuthenticationManager authenticationManager;
+
     private final UserRoleRepository userRoleRepository;
     private final UserRoleAccessRepository userRoleAccessRepository;
     private final UserRepository userRepository;
     private final UserService userService;
     private final Logger log = LoggerFactory.getLogger(AuthController.class);
 
-    public AuthController(UserService userService, UserRepository userRepository, UserRoleRepository userRoleRepository, UserRoleAccessRepository userRoleAccessRepository) {
-        this.userService = userService;
-        this.userRepository = userRepository;
+    public AuthController(AuthenticationManager authenticationManager, UserRoleRepository userRoleRepository, UserRoleAccessRepository userRoleAccessRepository, UserRepository userRepository, UserService userService) {
+        this.authenticationManager = authenticationManager;
         this.userRoleRepository = userRoleRepository;
         this.userRoleAccessRepository = userRoleAccessRepository;
+        this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     public ResponseEntity<String> authLogin(@RequestBody AuthRequestDto dto) {
-        return ResponseEntity.ok()
-                .body(userService.login(dto));
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword())
+        );
+
+        return ResponseEntity.ok().body("Token sementar");
     }
 
     @GetMapping(value = "/by")

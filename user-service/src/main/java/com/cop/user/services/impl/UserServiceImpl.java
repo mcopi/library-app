@@ -1,6 +1,5 @@
 package com.cop.user.services.impl;
 
-import com.cop.user.dtos.AuthRequestDto;
 import com.cop.user.models.User;
 import com.cop.user.models.UserDetailModel;
 import com.cop.user.repositories.UserRepository;
@@ -8,6 +7,7 @@ import com.cop.user.repositories.UserRoleAccessRepository;
 import com.cop.user.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,12 +23,14 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService, UserDetailsService {
     private final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
+    private final JwtServiceImpl jwtServiceImpl;
     private final UserRepository userRepository;
     private final UserRoleAccessRepository userRoleAccessRepository;
 
-    public UserServiceImpl(UserRepository userRepository, UserRoleAccessRepository userRoleAccessRepository) {
+    public UserServiceImpl(UserRepository userRepository, UserRoleAccessRepository userRoleAccessRepository, JwtServiceImpl jwtServiceImpl) {
         this.userRepository = userRepository;
         this.userRoleAccessRepository = userRoleAccessRepository;
+        this.jwtServiceImpl = jwtServiceImpl;
     }
 
     @Override
@@ -52,7 +54,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 .findByRole_Id(user.getRoleId().getId())
                 .stream()
                 .map(d ->
-                        new SimpleGrantedAuthority(d.getRoleAccess().getAccessName())
+                        new SimpleGrantedAuthority(d.getRoleAccess().getAccessCode())
                 ).collect(Collectors.toSet());
 
         response.setUsername(user.getUsername());
@@ -62,5 +64,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         log.info("Access: {}", response.getAuthorities());
     }
 
-
+    @Override
+    public String authLogin(Authentication authentication) {
+        return jwtServiceImpl.generateToken(authentication);
+    }
 }

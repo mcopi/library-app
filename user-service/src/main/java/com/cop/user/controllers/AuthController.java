@@ -16,7 +16,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -38,12 +40,16 @@ public class AuthController {
         this.userService = userService;
     }
 
-    public ResponseEntity<String> authLogin(@RequestBody AuthRequestDto dto) {
+    @PostMapping(value = "/login")
+    public ResponseEntity<Map<String, String>> authLogin(@RequestBody AuthRequestDto dto) {
+        Map<String, String> response = new HashMap<>();
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword())
         );
 
-        return ResponseEntity.ok().body("Token sementar");
+        response.put("token", userService.authLogin(authentication));
+
+        return ResponseEntity.ok().body(response);
     }
 
     @GetMapping(value = "/by")

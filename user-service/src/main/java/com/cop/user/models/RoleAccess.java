@@ -10,7 +10,7 @@ public class RoleAccess extends BaseEntity {
     private Long id;
     @Column(name = "access_name", length = 200)
     private String accessName;
-    @Column(name = "access_code", length = 10)
+    @Column(name = "access_code", length = 50)
     private String accessCode;
 
     public String getAccessName() {

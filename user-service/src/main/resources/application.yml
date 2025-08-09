@@ -22,3 +22,7 @@ spring:
     init:
       mode: never # always only for Initialization
       schema-locations: optional:classpath*:v1.0-init-user.sql
+
+jwt:
+  secret-key: 0G8Anf8Vf!DqwnL)Jy)?FDfBV{R*drD-N0i3Jykg
+  expiration-hour: 24

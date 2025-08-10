@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: books
+    name: book-service
   datasource:
     url: jdbc:postgresql://localhost:5432/library
     username: postgres

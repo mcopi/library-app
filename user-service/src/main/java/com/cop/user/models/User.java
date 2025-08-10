@@ -25,9 +25,9 @@ public class User extends BaseEntity {
     private Date dateOfBirth;
     @Column(name = "description", length = 255)
     private String description;
-    @ManyToMany
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id")
-    private UserRole roleId;
+    private UserRole role;
 
     public Long getId() {
         return id;
@@ -94,11 +94,11 @@ public class User extends BaseEntity {
     }
 
     public UserRole getRoleId() {
-        return roleId;
+        return role;
     }
 
-    public void setRoleId(UserRole roleId) {
-        this.roleId = roleId;
+    public void setRoleId(UserRole role) {
+        this.role = role;
     }
 
     @Override
@@ -111,7 +111,7 @@ public class User extends BaseEntity {
                 ", lastLoginDate=" + lastLoginDate +
                 ", dateOfBirth=" + dateOfBirth +
                 ", description='" + description + '\'' +
-                ", roleId=" + roleId +
+                ", roleId=" + role +
                 '}';
     }
 }

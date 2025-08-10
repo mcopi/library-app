@@ -1,0 +1,30 @@
+server:
+  port: 8092
+
+spring:
+  application:
+    name: user-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/library
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false # Development only
+    properties:
+      hibernate:
+        format_sql: true # Development only
+        transaction.coordinator_class: jdbc
+    defer-datasource-initialization: true
+  sql:
+    init:
+      mode: never # always only for Initialization
+      schema-locations: optional:classpath*:v1.0-init-user.sql
+
+jwt:
+#  secret-key: 0G8Anf8Vf!DqwnL)Jy)?FDfBV{R*drD-N0i3Jykg
+  secret-key: "&GbE;jh&+ArbMxC;F6@NA,*2&41K5w_Bu9N#7a_b0}VD(2u4]Y/)2U2M=jc8WXS+0"
+  expiration-hour: 24
+  issuer: http://localhost:8082/

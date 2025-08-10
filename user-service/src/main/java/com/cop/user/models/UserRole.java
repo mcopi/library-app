@@ -14,8 +14,12 @@ public class UserRole extends BaseEntity {
     private String roleName;
     @Column(name = "role_code", length = 10)
     private String roleCode;
-    @OneToMany(mappedBy = "roleId", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL,
+            orphanRemoval = true, fetch = FetchType.LAZY)
     private List<User> users;
+    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL,
+            orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<UserRoleAccess> roleAccesses;
 
     public Long getId() {
         return id;
@@ -39,14 +43,6 @@ public class UserRole extends BaseEntity {
 
     public void setRoleCode(String roleCode) {
         this.roleCode = roleCode;
-    }
-
-    public List<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<User> users) {
-        this.users = users;
     }
 
     @Override

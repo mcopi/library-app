@@ -9,10 +9,10 @@
 --        'LIBRARY APP', 'Dibuat oleh system', (SELECT id FROM COP_ROLE_USER WHERE ROLE_CODE = 'ADM'));
 --
 --    INSERT INTO COP_ROLE_ACCESS(ACCESS_NAME, ACCESS_CODE, CREATED_DATE, CREATED_BY)
---        VALUES('Home Admin', 'HADM', now(), 'SYSTEM'),
---        ('Home', 'HUSR', now(), 'SYSTEM'),
---        ('Dashboard Admin', 'DADM', now(), 'SYSTEM'),
---        ('Dashboard', 'DUSR', now(), 'SYSTEM');
+--        VALUES('Home Admin', 'admin-home', now(), 'SYSTEM'),
+--        ('Home', 'user-home', now(), 'SYSTEM'),
+--        ('Dashboard Admin', 'admin-dashboard', now(), 'SYSTEM'),
+--        ('Dashboard', 'user-dashboard', now(), 'SYSTEM');
 --
 --    INSERT INTO COP_USER_ROLE_ACCESS(USER_ID, ROLE_ID, ROLE_ACCESS_ID, CREATED_DATE, CREATED_BY)
 --        VALUES(

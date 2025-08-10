@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 .findByRole_Id(user.getRoleId().getId())
                 .stream()
                 .map(d ->
-                        new SimpleGrantedAuthority(d.getRoleAccess().getAccessCode())
+                        new SimpleGrantedAuthority(d.getRoleId().getRoleCode() + "-" +d.getRoleAccess().getAccessCode())
                 ).collect(Collectors.toSet());
 
         response.setUsername(user.getUsername());

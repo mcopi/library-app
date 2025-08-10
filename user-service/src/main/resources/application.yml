@@ -24,5 +24,7 @@ spring:
       schema-locations: optional:classpath*:v1.0-init-user.sql
 
 jwt:
-  secret-key: 0G8Anf8Vf!DqwnL)Jy)?FDfBV{R*drD-N0i3Jykg
+#  secret-key: 0G8Anf8Vf!DqwnL)Jy)?FDfBV{R*drD-N0i3Jykg
+  secret-key: "&GbE;jh&+ArbMxC;F6@NA,*2&41K5w_Bu9N#7a_b0}VD(2u4]Y/)2U2M=jc8WXS+0"
   expiration-hour: 24
+  issuer: http://localhost:8082/

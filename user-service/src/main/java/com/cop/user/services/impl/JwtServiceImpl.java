@@ -18,11 +18,13 @@ import java.util.stream.Collectors;
 
 @Service
 public class JwtServiceImpl implements JwtService {
+    @Value("${jwt.expiration-hour}")
+    private long expirationHour;
+    @Value("${jwt.issuer}")
+    private String issuer;
     @Value("${jwt.secret-key}")
     private String secretKey;
 
-    @Value("${jwt.expiration-hour}")
-    private long expirationHour;
 
     private SecretKey key;
 
@@ -42,14 +44,15 @@ public class JwtServiceImpl implements JwtService {
         claimsMap.put("expiresAt", Date.from(expiresAt).toString());
         claimsMap.put("roleAccess", authentication.getAuthorities()
                 .stream().map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toSet()).toString()
+                .collect(Collectors.joining("|"))
         );
 
         return Jwts.builder()
+                .setIssuer(issuer)
                 .setSubject(authentication.getName())
                 .setIssuedAt(Date.from(now))
                 .setExpiration(Date.from(expiresAt))
-                .signWith(key, SignatureAlgorithm.HS256)
+                .signWith(key, SignatureAlgorithm.HS512)
                 .setClaims(claimsMap)
                 .compact();
     }

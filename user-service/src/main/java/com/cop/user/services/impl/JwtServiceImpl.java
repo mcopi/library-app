@@ -2,14 +2,17 @@ package com.cop.user.services.impl;
 
 import com.cop.user.services.JwtService;
 import io.jsonwebtoken.*;
-import io.jsonwebtoken.security.Keys;
-import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
+import org.springframework.security.oauth2.jwt.JwsHeader;
+import org.springframework.security.oauth2.jwt.JwtClaimsSet;
+import org.springframework.security.oauth2.jwt.JwtEncoder;
+import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
-import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -22,15 +25,13 @@ public class JwtServiceImpl implements JwtService {
     private long expirationHour;
     @Value("${jwt.issuer}")
     private String issuer;
-    @Value("${jwt.secret-key}")
+    @Value("${jwt.secret.key}")
     private String secretKey;
 
+    private final JwtEncoder jwtEncoder;
 
-    private SecretKey key;
-
-    @PostConstruct
-    public void initKey() {
-        this.key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
+    public JwtServiceImpl(JwtEncoder jwtEncoder) {
+        this.jwtEncoder = jwtEncoder;
     }
 
     @Override
@@ -47,18 +48,23 @@ public class JwtServiceImpl implements JwtService {
                 .collect(Collectors.joining("|"))
         );
 
-        return Jwts.builder()
-                .setIssuer(issuer)
-                .setSubject(authentication.getName())
-                .setIssuedAt(Date.from(now))
-                .setExpiration(Date.from(expiresAt))
-                .signWith(key, SignatureAlgorithm.HS512)
-                .setClaims(claimsMap)
-                .compact();
+        JwtClaimsSet claims = JwtClaimsSet.builder()
+                .issuer(issuer)
+                .issuedAt(Date.from(now).toInstant())
+                .subject(authentication.getName())
+                .expiresAt(Date.from(expiresAt).toInstant())
+                .claim("scope", claimsMap)
+                .build();
+
+       JwsHeader jwsHeader = JwsHeader.with(MacAlgorithm.HS256).build();
+
+        return jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();
     }
 
     @Override
     public String getUsernameFromToken(String token) {
+        SecretKeySpec key = new SecretKeySpec(secretKey.getBytes(StandardCharsets.UTF_8), "HMACSHA256");
+
         return Jwts.parserBuilder()
                 .setSigningKey(key).build()
                 .parseClaimsJws(token)
@@ -69,7 +75,7 @@ public class JwtServiceImpl implements JwtService {
     @Override
     public boolean validateJwtToken(String token) {
         try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            Jwts.parserBuilder().build().parseClaimsJws(token);
             return true;
         } catch (SecurityException e) {
             System.out.println("Invalid JWT signature: " + e.getMessage());

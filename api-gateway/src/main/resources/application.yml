@@ -13,12 +13,30 @@ spring:
             - Path=/api/books/**
           filters:
             - RewritePath=/api/books/(?<segment>.*), /book/${segment}
+        - id: auth
+          uri: http://localhost:8092
+          predicates:
+            - Path=/api/auth/**
+          filters:
+            - RewritePath=/api/auth/(?<segment>.*), /auth-user/${segment}
+        - id: user
+          uri: http://localhost:8092
+          predicates:
+            - Path=/api/user/**
+          filters:
+            - RewritePath=/api/user/(?<segment>.*), /user/${segment}
   security:
     oath2:
       resourceserver:
-        issuer-uri: http://localhost:8092
+        jwt:
+#        issuer-uri: http://localhost:8092
+
+jwt:
+  secret:
+    key: GbEjhArbMxCF6@NA,2&41K5w_Bu9N#7a_b0}VD(2u4]Y/)2U2M=jc8WXS+0
 
 logging:
   level:
     root: INFO
     org.springframework.cloud.gateway: TRACE
+    org.springframework.security: TRACE

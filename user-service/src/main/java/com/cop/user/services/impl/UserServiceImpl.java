@@ -1,5 +1,7 @@
 package com.cop.user.services.impl;
 
+import com.cop.user.dtos.UserRequestDto;
+import com.cop.user.dtos.UserResponseDto;
 import com.cop.user.models.User;
 import com.cop.user.models.UserDetailModel;
 import com.cop.user.repositories.UserRepository;
@@ -7,7 +9,6 @@ import com.cop.user.repositories.UserRoleAccessRepository;
 import com.cop.user.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -23,14 +25,12 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService, UserDetailsService {
     private final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
-    private final JwtServiceImpl jwtServiceImpl;
     private final UserRepository userRepository;
     private final UserRoleAccessRepository userRoleAccessRepository;
 
-    public UserServiceImpl(UserRepository userRepository, UserRoleAccessRepository userRoleAccessRepository, JwtServiceImpl jwtServiceImpl) {
+    public UserServiceImpl(UserRepository userRepository, UserRoleAccessRepository userRoleAccessRepository) {
         this.userRepository = userRepository;
         this.userRoleAccessRepository = userRoleAccessRepository;
-        this.jwtServiceImpl = jwtServiceImpl;
     }
 
     @Override
@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public String authLogin(Authentication authentication) {
-        return jwtServiceImpl.generateToken(authentication);
+    public List<UserResponseDto> findAllUsers(UserRequestDto dto) {
+        return userRepository.findAllUsers(dto.getDeleted());
     }
 }
